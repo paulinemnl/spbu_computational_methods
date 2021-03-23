@@ -1,1 +1,0 @@
-# spbu_computational_methods
