@@ -49,8 +49,8 @@ def jacobi_method(A, eps):
     max_j = 0
     while True:
         H = np.eye(A.shape[0], dtype=float)
-        # max_i, max_j = max_gersh(A, iter, r, max_i, max_j)  # оптимальный элемент с помощью кругов Гершгорина
-        max_i, max_j = max_mod(A)  # оптимальный элемент - наибольший наддиагональный по модулю
+        max_i, max_j = max_gersh(A, iter, r, max_i, max_j)  # оптимальный элемент с помощью кругов Гершгорина
+        # max_i, max_j = max_mod(A)  # оптимальный элемент - наибольший наддиагональный по модулю
         if abs(A[max_i, max_j]) < eps:
             return np.diag(A), iter
         iter += 1
@@ -62,15 +62,18 @@ def jacobi_method(A, eps):
         A = H.T @ A @ H
 
 
-n = 10
+n = 4
 A = np.array(np.zeros((n, n)), dtype=float)
 for i in range(n):
     for j in range(n):
         A[i][j] = 1 / (i + 1 + j + 1 - 1)
+lambda_acc = np.linalg.eig(A)[0]
 for eps in (1e-2, 1e-3, 1e-4, 1e-5):
     print("Матрица Гильбертва", n, "порядка")
+    # print("Матрица:")
     # print(*A, sep='\n')
     print("Погрешность:", eps)
     lambda_comp, iter = jacobi_method(A, eps)
     print("Количество итераций:", iter)
+    print("||lambda_acc - lambda|| =", np.linalg.norm(np.sort(lambda_acc) - np.sort(lambda_comp)))
 
