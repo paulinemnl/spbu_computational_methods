@@ -171,7 +171,7 @@ def grid(a, b, alpha0, alpha1, beta0, beta1, A_c, B_c, h, eps):
         v2 = find_solution(a, b, alpha0, alpha1, beta0, beta1, A_c, B_c, h / (coef ** k))
         err = np.zeros(v1.shape[0], dtype=float)
         for i in range(v1.shape[0]):
-            err[i] = (v2[i * 2] - v1[i]) / (coef ** 2 - 1)
+            err[i] = (v2[i * 2] - v1[i]) / (coef ** 1 - 1)
         if np.linalg.norm(err) < eps:
             for i in range(n + 1):
                 if i % 2 == 0:
@@ -181,13 +181,16 @@ def grid(a, b, alpha0, alpha1, beta0, beta1, A_c, B_c, h, eps):
             x = np.zeros(v2.shape[0], dtype=float)
             for i in range(v2.shape[0]):
                 x[i] = a + i * h / (coef ** k)
-            return x, v2, h / (coef ** k)
+            return x, v2, h / (coef ** k), k
 
 
 n = 3
 h = 1 / 8
-eps = 1e-5
-x, y, h_new = grid(a(), b(), alpha0(), alpha1(), beta0(), beta1(), A_p(), B_p(), h, eps)
+eps = 1e-2
+x, y, h_new, k = grid(a(), b(), alpha0(), alpha1(), beta0(), beta1(), A_p(), B_p(), h, eps)
+print("Погрешность", eps)
+print("Шаг конечной сетки =", h_new)
+print("Количество шагов сгущения сетки:", k)
 plt.plot(x, y, marker='.', color='red', mec='black', ms=10)
 plt.xlabel('x')
 plt.ylabel('y')
