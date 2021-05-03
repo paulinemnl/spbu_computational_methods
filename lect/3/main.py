@@ -61,9 +61,9 @@ def main():
             res[i - 1, j - 4] = np.linalg.norm(u0 - solution)
     res_table = tabulate(res, headers=headers, tablefmt='github', numalign="right")
     print(res_table)
-    ind = np.unravel_index(np.argmin(res, axis=None), res.shape)
-    print('Оптим. n =', res[ind[0], 0])
-    print('Оптим. alpha =', headers[ind[1]])
+    index = np.unravel_index(np.argmin(res, axis=None), res.shape)
+    print('Оптим. n =', res[index[0], 0])
+    print('Оптим. alpha =', headers[index[1]])
 
 
 if __name__ == '__main__':
