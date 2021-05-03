@@ -51,7 +51,7 @@ def find_u(N, a, b, M):
 def find_solution(N, alpha, a, b, M):
     B = find_b(N, a, b, M)
     uk = find_u(N, a, b, M)
-    return np.linalg.solve(B.transpose() @ B + alpha * np.identity(N), B.transpose() @ uk)
+    return np.linalg.solve(B.transpose() @ B + alpha * np.eye(N), B.transpose() @ uk)
 
 
 def main():
