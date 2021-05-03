@@ -75,7 +75,6 @@ def main():
     ind = np.unravel_index(np.argmin(res, axis=None), res.shape)
     print('Оптим. n =', res[ind[0], 0])
     print('Оптим. alpha =', headers[ind[1]])
-    print(res[ind])
 
 
 if __name__ == '__main__':
