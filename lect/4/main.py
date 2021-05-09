@@ -6,6 +6,7 @@ from scipy.special import sh_legendre
 
 def u(x):
     return math.log(1 + 2 * x) / (2 * x)
+    # return 1 / (2 * x) - math.log(1 + 2 * x) / (4 * x * x)
 
 
 def K(x, s):
