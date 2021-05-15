@@ -5,8 +5,8 @@ from scipy.special import sh_legendre
 
 
 def u(x):
-    return math.log(1 + 2 * x) / (2 * x)
-    # return 1 / (2 * x) - math.log(1 + 2 * x) / (4 * x * x)
+    # return math.log(1 + 2 * x) / (2 * x)  # 1
+    return 1 / (2 * x) - math.log(1 + 2 * x) / (4 * x * x)  # 2
 
 
 def K(x, s):
@@ -52,7 +52,20 @@ def find_u(N, a, b, M):
 def find_solution(N, alpha, a, b, M):
     B = find_b(N, a, b, M)
     uk = find_u(N, a, b, M)
-    return np.linalg.solve(B.transpose() @ B + alpha * np.eye(N), B.transpose() @ uk)
+    nodes = find_nodes(M, a, b)
+    w_k = [sh_legendre(i) for i in range(N)]
+    coef_solution = np.linalg.solve(B.transpose() @ B + alpha * np.eye(N), B.transpose() @ uk)
+    solution = 0
+    return lambda x: sum(sh_legendre(i)(x) * coef_solution[i] for i in range(N))
+
+
+def scalar_mult(fun1,fun2):
+    nodes = find_nodes(20, 0, 1)
+    return (1/20)*sum(fun1(x)*fun2(x) for x in nodes)
+
+
+def norm(fun):
+    return scalar_mult(fun,fun)**(0.5)
 
 
 def main():
@@ -63,6 +76,7 @@ def main():
     b = 1
     res = np.zeros((N, max_degree_alpha - 4 + 1))
     headers = [r'n\a']
+    nodes = find_nodes(20, 0, 1)
     for j in range(5, max_degree_alpha + 1):
         headers.append(10 ** (-j))
     for i in range(1, N + 1):
@@ -70,14 +84,18 @@ def main():
         res[i - 1, 0] = i + 1
         for j in range(5, max_degree_alpha + 1):
             solution = find_solution(i, 10 ** (-j), a, b, M)
-            res[i - 1, j - 4] = np.linalg.norm(solution - u0)
+            # res[i - 1, j - 4] = norm(lambda x: solution(x) - 1)  # 1
+            res[i - 1, j - 4] = norm(lambda x: solution(x) - x)  # 2
     res_table = tabulate(res, headers=headers, tablefmt='github', numalign="right")
     print(res_table)
     index = np.unravel_index(np.argmin(res, axis=None), res.shape)
     print('Оптим. n =', res[index[0], 0])
     print('Оптим. alpha =', headers[index[1]])
+    print('Погрешность =', res[index])
 
 
 if __name__ == '__main__':
     main()
+
+
 
